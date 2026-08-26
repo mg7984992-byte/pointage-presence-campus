@@ -4,6 +4,7 @@ import DashboardPage from './pages/DashboardPage'
 import PointagePage from './pages/PointagePage'
 import EtudiantsPage from './pages/EtudiantsPage'
 import ClassesPage from './pages/ClassesPage'
+import RapportsPage from './pages/RapportsPage'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/pointage" element={<PointagePage />} />
         <Route path="/etudiants" element={<EtudiantsPage />} />
         <Route path="/classes" element={<ClassesPage />} />
+        <Route path="/rapports" element={<RapportsPage />} />
       </Routes>
     </BrowserRouter>
   )
