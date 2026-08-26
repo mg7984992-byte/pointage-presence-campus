@@ -6,18 +6,24 @@ import EtudiantsPage from './pages/EtudiantsPage'
 import ClassesPage from './pages/ClassesPage'
 import RapportsPage from './pages/RapportsPage'
 import ProfilPage from './pages/ProfilPage'
+import ParametresPage from './pages/ParametresPage'
+import Layout from './components/Layout'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/pointage" element={<PointagePage />} />
-        <Route path="/etudiants" element={<EtudiantsPage />} />
-        <Route path="/classes" element={<ClassesPage />} />
-        <Route path="/rapports" element={<RapportsPage />} />
-        <Route path="/profil" element={<ProfilPage />} />
+
+        <Route element={<Layout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/pointage" element={<PointagePage />} />
+          <Route path="/etudiants" element={<EtudiantsPage />} />
+          <Route path="/classes" element={<ClassesPage />} />
+          <Route path="/rapports" element={<RapportsPage />} />
+          <Route path="/profil" element={<ProfilPage />} />
+          <Route path="/parametres" element={<ParametresPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )
