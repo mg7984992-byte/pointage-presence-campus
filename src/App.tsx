@@ -1,7 +1,7 @@
-import DashboardPage from './pages/DashboardPage'
+import PointagePage from './pages/PointagePage'
 
 function App() {
-  return <DashboardPage />
+  return <PointagePage />
 }
 
 export default App
