@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import PointagePage from './pages/PointagePage'
 import EtudiantsPage from './pages/EtudiantsPage'
+import ClassesPage from './pages/ClassesPage'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/pointage" element={<PointagePage />} />
         <Route path="/etudiants" element={<EtudiantsPage />} />
+        <Route path="/classes" element={<ClassesPage />} />
       </Routes>
     </BrowserRouter>
   )
