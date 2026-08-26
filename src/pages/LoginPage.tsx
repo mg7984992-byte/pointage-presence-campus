@@ -1,7 +1,16 @@
+import { useNavigate } from 'react-router-dom'
+
 function LoginPage() {
+  const navigate = useNavigate()
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    navigate('/dashboard')
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form className="bg-white p-8 rounded-lg shadow-md w-80">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-80">
         <h1 className="text-2xl font-bold mb-6 text-center text-blue-600">
           Connexion
         </h1>
