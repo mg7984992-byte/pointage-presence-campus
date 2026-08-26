@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------
+// Rôles (admin, staff, enseignant, étudiant)
+// ---------------------------------------------------------
+model Role {
+  id          Int    @id @default(autoincrement())
+  nom         String @unique
+  description String?
+
+  users User[]
+
+  @@map("roles")
+}
+
+// ---------------------------------------------------------
+// Comptes utilisateurs (tous rôles confondus)
+// ---------------------------------------------------------
+model User {
+  id           Int      @id @default(autoincrement())
+  nom          String
+  prenom       String
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  statut       String   @default("actif")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  roleId Int  @map("role_id")
+  role   Role @relation(fields: [roleId], references: [id])
+
+  student       Student?
+  notifications Notification[]
+  auditLogs     AuditLog[]
+  sessions      Session[]
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------
+// Informations spécifiques aux étudiants
+// ---------------------------------------------------------
+model Student {
+  id        Int    @id @default(autoincrement())
+  matricule String @unique
+
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  classeId Int?    @map("classe_id")
+  classe   Classe? @relation(fields: [classeId], references: [id])
+
+  attendances Attendance[]
+
+  @@map("students")
+}
+
+// ---------------------------------------------------------
+// Classes / groupes / niveaux
+// ---------------------------------------------------------
+model Classe {
+  id     Int    @id @default(autoincrement())
+  nom    String
+  niveau String?
+  annee  String?
+
+  students Student[]
+
+  @@map("classes")
+}
+
+// ---------------------------------------------------------
+// Pointages (présences)
+// ---------------------------------------------------------
+model Attendance {
+  id           Int       @id @default(autoincrement())
+  date         DateTime  @db.Date
+  heureEntree  DateTime? @map("heure_entree")
+  heureSortie  DateTime? @map("heure_sortie")
+  statut       String    @default("absent") // present, retard, absence_justifiee, absent
+  mode         String    @default("manuel")  // manuel, qr_code, badge
+
+  studentId Int     @map("student_id")
+  student   Student @relation(fields: [studentId], references: [id])
+
+  @@map("attendance")
+}
+
+// ---------------------------------------------------------
+// Sessions / jetons de connexion
+// ---------------------------------------------------------
+model Session {
+  id         Int      @id @default(autoincrement())
+  tokenHash  String   @map("token_hash")
+  expiresAt  DateTime @map("expires_at")
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  @@map("sessions")
+}
+
+// ---------------------------------------------------------
+// Notifications envoyées aux utilisateurs
+// ---------------------------------------------------------
+model Notification {
+  id        Int      @id @default(autoincrement())
+  titre     String
+  message   String
+  lu        Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+// ---------------------------------------------------------
+// Journal des actions sensibles (traçabilité)
+// ---------------------------------------------------------
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  action    String
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
