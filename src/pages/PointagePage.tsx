@@ -1,9 +1,24 @@
+import { useState } from 'react'
+
 function PointagePage() {
-  const etudiants = [
+  const [etudiants, setEtudiants] = useState([
     { id: 1, nom: "Diop Awa", statut: "Présent" },
     { id: 2, nom: "Ndiaye Moussa", statut: "Absent" },
     { id: 3, nom: "Fall Fatou", statut: "Présent" },
-  ]
+  ])
+
+  function toggleStatut(id: number) {
+    setEtudiants(
+      etudiants.map((etudiant) =>
+        etudiant.id === id
+          ? {
+              ...etudiant,
+              statut: etudiant.statut === "Présent" ? "Absent" : "Présent",
+            }
+          : etudiant
+      )
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -36,7 +51,10 @@ function PointagePage() {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <button className="text-blue-600 hover:underline text-sm">
+                  <button
+                    onClick={() => toggleStatut(etudiant.id)}
+                    className="text-blue-600 hover:underline text-sm"
+                  >
                     Modifier
                   </button>
                 </td>
