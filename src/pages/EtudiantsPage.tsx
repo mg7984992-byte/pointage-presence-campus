@@ -11,6 +11,11 @@ function EtudiantsPage() {
   const [nom, setNom] = useState('')
   const [classe, setClasse] = useState('')
   const [email, setEmail] = useState('')
+  const [recherche, setRecherche] = useState('')
+
+  const etudiantsFiltres = etudiants.filter((etudiant) =>
+    etudiant.nom.toLowerCase().includes(recherche.toLowerCase())
+  )
 
   function handleAjouter(e: React.FormEvent) {
     e.preventDefault()
@@ -33,7 +38,7 @@ function EtudiantsPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-blue-600">Étudiants</h1>
         <button
           onClick={() => setShowForm(!showForm)}
@@ -42,6 +47,14 @@ function EtudiantsPage() {
           {showForm ? 'Annuler' : '+ Ajouter un étudiant'}
         </button>
       </div>
+
+      <input
+        type="text"
+        placeholder="Rechercher un étudiant..."
+        value={recherche}
+        onChange={(e) => setRecherche(e.target.value)}
+        className="border border-gray-300 rounded px-3 py-2 mb-4 w-full md:w-64"
+      />
 
       {showForm && (
         <form
@@ -92,7 +105,7 @@ function EtudiantsPage() {
             </tr>
           </thead>
           <tbody>
-            {etudiants.map((etudiant) => (
+            {etudiantsFiltres.map((etudiant) => (
               <tr key={etudiant.id} className="border-b last:border-0">
                 <td className="px-6 py-4">{etudiant.nom}</td>
                 <td className="px-6 py-4">{etudiant.classe}</td>
