@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 function Sidebar() {
   const location = useLocation()
+  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
 
   const liens = [
@@ -14,6 +15,10 @@ function Sidebar() {
     { path: '/profil', label: 'Profil' },
     { path: '/parametres', label: 'Paramètres' },
   ]
+
+  function handleDeconnexion() {
+    navigate('/')
+  }
 
   return (
     <>
@@ -32,27 +37,38 @@ function Sidebar() {
       <aside
         className={`${
           isOpen ? 'block' : 'hidden'
-        } md:block w-full md:w-56 md:min-h-screen bg-white border-r shadow-sm`}
+        } md:block w-full md:w-56 md:min-h-screen bg-white border-r shadow-sm flex flex-col justify-between`}
       >
-        <div className="hidden md:block p-4 border-b">
-          <h2 className="font-bold text-blue-600 text-lg">Campus</h2>
+        <div>
+          <div className="hidden md:block p-4 border-b">
+            <h2 className="font-bold text-blue-600 text-lg">Campus</h2>
+          </div>
+          <nav className="p-3 space-y-1">
+            {liens.map((lien) => (
+              <Link
+                key={lien.path}
+                to={lien.path}
+                onClick={() => setIsOpen(false)}
+                className={`block px-3 py-2 rounded text-sm ${
+                  location.pathname === lien.path
+                    ? 'bg-blue-100 text-blue-700 font-medium'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                {lien.label}
+              </Link>
+            ))}
+          </nav>
         </div>
-        <nav className="p-3 space-y-1">
-          {liens.map((lien) => (
-            <Link
-              key={lien.path}
-              to={lien.path}
-              onClick={() => setIsOpen(false)}
-              className={`block px-3 py-2 rounded text-sm ${
-                location.pathname === lien.path
-                  ? 'bg-blue-100 text-blue-700 font-medium'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              {lien.label}
-            </Link>
-          ))}
-        </nav>
+
+        <div className="p-3 border-t">
+          <button
+            onClick={handleDeconnexion}
+            className="w-full text-left px-3 py-2 rounded text-sm text-red-600 hover:bg-red-50"
+          >
+            Déconnexion
+          </button>
+        </div>
       </aside>
     </>
   )
