@@ -8,6 +8,7 @@ import RapportsPage from './pages/RapportsPage'
 import ProfilPage from './pages/ProfilPage'
 import ParametresPage from './pages/ParametresPage'
 import Layout from './components/Layout'
+import NotFoundPage from './pages/NotFoundPage'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/rapports" element={<RapportsPage />} />
           <Route path="/profil" element={<ProfilPage />} />
           <Route path="/parametres" element={<ParametresPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
