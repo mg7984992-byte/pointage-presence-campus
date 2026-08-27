@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Modal from '../components/Modal'
 
 function ClassesPage() {
   const [classes, setClasses] = useState([
@@ -10,6 +11,7 @@ function ClassesPage() {
   const [showForm, setShowForm] = useState(false)
   const [nom, setNom] = useState('')
   const [enseignant, setEnseignant] = useState('')
+  const [classeSelectionnee, setClasseSelectionnee] = useState<typeof classes[0] | null>(null)
 
   function handleAjouter(e: React.FormEvent) {
     e.preventDefault()
@@ -82,7 +84,10 @@ function ClassesPage() {
               Enseignant : {classe.enseignant}
             </p>
             <div className="flex justify-between">
-              <button className="text-blue-600 hover:underline text-sm">
+              <button
+                onClick={() => setClasseSelectionnee(classe)}
+                className="text-blue-600 hover:underline text-sm"
+              >
                 Voir les détails
               </button>
               <button
@@ -95,6 +100,19 @@ function ClassesPage() {
           </div>
         ))}
       </div>
+
+      <Modal
+        isOpen={classeSelectionnee !== null}
+        onClose={() => setClasseSelectionnee(null)}
+        title={classeSelectionnee?.nom || ''}
+      >
+        {classeSelectionnee && (
+          <div className="space-y-2 text-sm text-gray-700">
+            <p><strong>Nombre d'étudiants :</strong> {classeSelectionnee.nbEtudiants}</p>
+            <p><strong>Enseignant :</strong> {classeSelectionnee.enseignant}</p>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
