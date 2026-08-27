@@ -1,75 +1,63 @@
-# React + TypeScript + Vite
+# Pointo — Pointage & Présence Campus
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Plateforme de gestion du pointage et de la présence des étudiants et du staff.
 
-Currently, two official plugins are available:
+## Stack technique
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Frontend** : React + TypeScript + Tailwind CSS
+- **Backend** : NestJS
+- **Base de données** : MySQL + Prisma
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Structure du projet
 
 ```
-
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+pointage-presence-campus/
+├── src/            → frontend (React)
+├── database/       → schéma Prisma, migrations, seed
+└── README.md
 ```
+
+## Installation de la base de données (dossier `database/`)
+
+1. Installer les dépendances :
+   ```
+   cd database
+   npm install
+   ```
+
+2. Créer une base MySQL nommée `pointage_campus` (via phpMyAdmin ou en ligne de commande).
+
+3. Copier `.env.example` en `.env` et adapter les identifiants si besoin :
+   ```
+   DATABASE_URL="mysql://root:@localhost:3306/pointage_campus"
+   ```
+
+4. Appliquer les migrations (crée les 8 tables) :
+   ```
+   npx prisma migrate dev
+   ```
+
+5. Remplir la base avec des données de test :
+   ```
+   npx prisma db seed
+   ```
+
+6. (Optionnel) Visualiser les données :
+   ```
+   npx prisma studio
+   ```
+
+## Comptes de test créés par le seed
+
+| Rôle     | Email               |
+|----------|---------------------|
+| Admin    | admin@campus.sn     |
+| Étudiant | etudiant@campus.sn  |
+
+*(mots de passe placeholders — le vrai système d'authentification est géré par le backend)*
+
+## Équipe
+
+- **Membre 1** — Frontend & expérience utilisateur
+- **Membre 2** — Backend & API
+- **Membre 3** — Base de données & infrastructure
