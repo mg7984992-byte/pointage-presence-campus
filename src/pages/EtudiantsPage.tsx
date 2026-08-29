@@ -37,12 +37,12 @@ function EtudiantsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-slate-950 p-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold text-blue-600">Étudiants</h1>
+        <h1 className="text-2xl font-bold text-orange-400">Étudiants</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+          className="bg-orange-500 text-slate-950 font-medium px-4 py-2 rounded hover:bg-orange-400 text-sm"
         >
           {showForm ? 'Annuler' : '+ Ajouter un étudiant'}
         </button>
@@ -53,13 +53,13 @@ function EtudiantsPage() {
         placeholder="Rechercher un étudiant..."
         value={recherche}
         onChange={(e) => setRecherche(e.target.value)}
-        className="border border-gray-300 rounded px-3 py-2 mb-4 w-full md:w-64"
+        className="bg-slate-900 border border-slate-700 text-slate-200 placeholder-slate-500 rounded px-3 py-2 mb-4 w-full md:w-64"
       />
 
       {showForm && (
         <form
           onSubmit={handleAjouter}
-          className="bg-white p-6 rounded-lg shadow mb-6 grid grid-cols-1 md:grid-cols-3 gap-4"
+          className="bg-slate-900 border border-slate-700 p-6 rounded-lg mb-6 grid grid-cols-1 md:grid-cols-3 gap-4"
         >
           <input
             type="text"
@@ -67,7 +67,7 @@ function EtudiantsPage() {
             value={nom}
             onChange={(e) => setNom(e.target.value)}
             required
-            className="border border-gray-300 rounded px-3 py-2"
+            className="bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded px-3 py-2"
           />
           <input
             type="text"
@@ -75,7 +75,7 @@ function EtudiantsPage() {
             value={classe}
             onChange={(e) => setClasse(e.target.value)}
             required
-            className="border border-gray-300 rounded px-3 py-2"
+            className="bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded px-3 py-2"
           />
           <input
             type="email"
@@ -83,40 +83,40 @@ function EtudiantsPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="border border-gray-300 rounded px-3 py-2"
+            className="bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded px-3 py-2"
           />
           <button
             type="submit"
-            className="md:col-span-3 bg-green-600 text-white py-2 rounded hover:bg-green-700"
+            className="md:col-span-3 bg-green-500 text-slate-950 font-medium py-2 rounded hover:bg-green-400"
           >
             Enregistrer l'étudiant
           </button>
         </form>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-gray-50 border-b">
+          <thead className="bg-slate-800 border-b border-slate-700">
             <tr>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Nom</th>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Classe</th>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Email</th>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Action</th>
+              <th className="px-6 py-3 text-sm font-medium text-slate-400">Nom</th>
+              <th className="px-6 py-3 text-sm font-medium text-slate-400">Classe</th>
+              <th className="px-6 py-3 text-sm font-medium text-slate-400">Email</th>
+              <th className="px-6 py-3 text-sm font-medium text-slate-400">Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-700">
             {etudiantsFiltres.map((etudiant) => (
-              <tr key={etudiant.id} className="border-b last:border-0">
-                <td className="px-6 py-4">{etudiant.nom}</td>
-                <td className="px-6 py-4">{etudiant.classe}</td>
-                <td className="px-6 py-4 text-gray-600">{etudiant.email}</td>
+              <tr key={etudiant.id}>
+                <td className="px-6 py-4 text-slate-200">{etudiant.nom}</td>
+                <td className="px-6 py-4 text-slate-300">{etudiant.classe}</td>
+                <td className="px-6 py-4 text-slate-400">{etudiant.email}</td>
                 <td className="px-6 py-4">
-                  <button className="text-blue-600 hover:underline text-sm mr-3">
+                  <button className="text-orange-400 hover:underline text-sm mr-3">
                     Modifier
                   </button>
                   <button
                     onClick={() => handleSupprimer(etudiant.id)}
-                    className="text-red-600 hover:underline text-sm"
+                    className="text-red-400 hover:underline text-sm"
                   >
                     Supprimer
                   </button>
