@@ -32,12 +32,12 @@ function ClassesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-slate-950 p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-blue-600">Classes</h1>
+        <h1 className="text-2xl font-bold text-orange-400">Classes</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+          className="bg-orange-500 text-slate-950 font-medium px-4 py-2 rounded hover:bg-orange-400 text-sm"
         >
           {showForm ? 'Annuler' : '+ Ajouter une classe'}
         </button>
@@ -46,7 +46,7 @@ function ClassesPage() {
       {showForm && (
         <form
           onSubmit={handleAjouter}
-          className="bg-white p-6 rounded-lg shadow mb-6 grid grid-cols-1 md:grid-cols-2 gap-4"
+          className="bg-slate-900 border border-slate-700 p-6 rounded-lg mb-6 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
           <input
             type="text"
@@ -54,7 +54,7 @@ function ClassesPage() {
             value={nom}
             onChange={(e) => setNom(e.target.value)}
             required
-            className="border border-gray-300 rounded px-3 py-2"
+            className="bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded px-3 py-2"
           />
           <input
             type="text"
@@ -62,11 +62,11 @@ function ClassesPage() {
             value={enseignant}
             onChange={(e) => setEnseignant(e.target.value)}
             required
-            className="border border-gray-300 rounded px-3 py-2"
+            className="bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded px-3 py-2"
           />
           <button
             type="submit"
-            className="md:col-span-2 bg-green-600 text-white py-2 rounded hover:bg-green-700"
+            className="md:col-span-2 bg-green-500 text-slate-950 font-medium py-2 rounded hover:bg-green-400"
           >
             Enregistrer la classe
           </button>
@@ -75,24 +75,24 @@ function ClassesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {classes.map((classe) => (
-          <div key={classe.id} className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-semibold mb-2">{classe.nom}</h2>
-            <p className="text-sm text-gray-500 mb-1">
+          <div key={classe.id} className="bg-slate-900 border border-slate-700 p-6 rounded-lg">
+            <h2 className="text-lg font-semibold mb-2 text-slate-100">{classe.nom}</h2>
+            <p className="text-sm text-slate-400 mb-1">
               {classe.nbEtudiants} étudiants
             </p>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-slate-400 mb-4">
               Enseignant : {classe.enseignant}
             </p>
             <div className="flex justify-between">
               <button
                 onClick={() => setClasseSelectionnee(classe)}
-                className="text-blue-600 hover:underline text-sm"
+                className="text-orange-400 hover:underline text-sm"
               >
                 Voir les détails
               </button>
               <button
                 onClick={() => handleSupprimer(classe.id)}
-                className="text-red-600 hover:underline text-sm"
+                className="text-red-400 hover:underline text-sm"
               >
                 Supprimer
               </button>
@@ -107,7 +107,7 @@ function ClassesPage() {
         title={classeSelectionnee?.nom || ''}
       >
         {classeSelectionnee && (
-          <div className="space-y-2 text-sm text-gray-700">
+          <div className="space-y-2 text-sm text-slate-700">
             <p><strong>Nombre d'étudiants :</strong> {classeSelectionnee.nbEtudiants}</p>
             <p><strong>Enseignant :</strong> {classeSelectionnee.enseignant}</p>
           </div>
