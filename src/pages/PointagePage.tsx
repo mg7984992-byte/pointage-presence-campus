@@ -20,48 +20,48 @@ function PointagePage() {
     )
   }
 
+  function couleurBarre(statut: string) {
+    if (statut === "Présent") return "bg-green-400 w-full"
+    if (statut === "Absent") return "bg-red-400 w-1/4"
+    return "bg-orange-400 w-2/3"
+  }
+
+  function couleurTexte(statut: string) {
+    if (statut === "Présent") return "text-green-400"
+    if (statut === "Absent") return "text-red-400"
+    return "text-orange-400"
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold text-blue-600 mb-6">
+    <div className="min-h-screen bg-slate-950 p-6">
+      <h1 className="text-2xl font-bold text-orange-400 mb-6">
         Pointage du jour
       </h1>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Nom</th>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Statut</th>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {etudiants.map((etudiant) => (
-              <tr key={etudiant.id} className="border-b last:border-0">
-                <td className="px-6 py-4">{etudiant.nom}</td>
-                <td className="px-6 py-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      etudiant.statut === "Présent"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
-                    {etudiant.statut}
-                  </span>
-                </td>
-                <td className="px-6 py-4">
-                  <button
-                    onClick={() => toggleStatut(etudiant.id)}
-                    className="text-blue-600 hover:underline text-sm"
-                  >
-                    Modifier
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden max-w-xl">
+        <div className="divide-y divide-slate-700">
+          {etudiants.map((etudiant) => (
+            <div
+              key={etudiant.id}
+              className="flex items-center justify-between px-6 py-4"
+            >
+              <span className="text-slate-200">{etudiant.nom}</span>
+
+              <div className="flex items-center gap-4 flex-1 max-w-xs mx-6">
+                <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
+                  <div className={`h-full rounded-full ${couleurBarre(etudiant.statut)}`} />
+                </div>
+              </div>
+
+              <button
+                onClick={() => toggleStatut(etudiant.id)}
+                className={`text-sm font-medium ${couleurTexte(etudiant.statut)}`}
+              >
+                {etudiant.statut.toLowerCase()}
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
