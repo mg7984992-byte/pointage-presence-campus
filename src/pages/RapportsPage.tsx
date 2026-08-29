@@ -31,18 +31,24 @@ function RapportsPage() {
     setRapports(rapports.filter((rapport) => rapport.id !== id))
   }
 
+  function couleurTaux(taux: number) {
+    if (taux >= 90) return "text-green-400"
+    if (taux >= 75) return "text-orange-400"
+    return "text-red-400"
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-slate-950 p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-blue-600">Rapports</h1>
+        <h1 className="text-2xl font-bold text-orange-400">Rapports</h1>
         <div className="flex gap-2">
           <button
             onClick={() => setShowForm(!showForm)}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm"
+            className="bg-orange-500 text-slate-950 font-medium px-4 py-2 rounded hover:bg-orange-400 text-sm"
           >
             {showForm ? 'Annuler' : '+ Ajouter un rapport'}
           </button>
-          <button className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 text-sm">
+          <button className="bg-slate-800 border border-slate-700 text-slate-200 px-4 py-2 rounded hover:bg-slate-700 text-sm">
             Exporter en PDF
           </button>
         </div>
@@ -51,7 +57,7 @@ function RapportsPage() {
       {showForm && (
         <form
           onSubmit={handleAjouter}
-          className="bg-white p-6 rounded-lg shadow mb-6 grid grid-cols-1 md:grid-cols-3 gap-4"
+          className="bg-slate-900 border border-slate-700 p-6 rounded-lg mb-6 grid grid-cols-1 md:grid-cols-3 gap-4"
         >
           <input
             type="text"
@@ -59,7 +65,7 @@ function RapportsPage() {
             value={classe}
             onChange={(e) => setClasse(e.target.value)}
             required
-            className="border border-gray-300 rounded px-3 py-2"
+            className="bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded px-3 py-2"
           />
           <input
             type="text"
@@ -67,7 +73,7 @@ function RapportsPage() {
             value={periode}
             onChange={(e) => setPeriode(e.target.value)}
             required
-            className="border border-gray-300 rounded px-3 py-2"
+            className="bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded px-3 py-2"
           />
           <input
             type="number"
@@ -77,50 +83,42 @@ function RapportsPage() {
             min="0"
             max="100"
             required
-            className="border border-gray-300 rounded px-3 py-2"
+            className="bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-500 rounded px-3 py-2"
           />
           <button
             type="submit"
-            className="md:col-span-3 bg-green-600 text-white py-2 rounded hover:bg-green-700"
+            className="md:col-span-3 bg-green-500 text-slate-950 font-medium py-2 rounded hover:bg-green-400"
           >
             Enregistrer le rapport
           </button>
         </form>
       )}
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-gray-50 border-b">
+          <thead className="bg-slate-800 border-b border-slate-700">
             <tr>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Classe</th>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Période</th>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Taux de présence</th>
-              <th className="px-6 py-3 text-sm font-medium text-gray-500">Action</th>
+              <th className="px-6 py-3 text-sm font-medium text-slate-400">Classe</th>
+              <th className="px-6 py-3 text-sm font-medium text-slate-400">Période</th>
+              <th className="px-6 py-3 text-sm font-medium text-slate-400">Taux de présence</th>
+              <th className="px-6 py-3 text-sm font-medium text-slate-400">Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-slate-700">
             {rapports.map((rapport) => (
-              <tr key={rapport.id} className="border-b last:border-0">
-                <td className="px-6 py-4">{rapport.classe}</td>
-                <td className="px-6 py-4 text-gray-600">{rapport.periode}</td>
-                <td
-                  className={`px-6 py-4 font-semibold ${
-                    rapport.tauxPresence >= 90
-                      ? "text-green-600"
-                      : rapport.tauxPresence >= 75
-                      ? "text-orange-500"
-                      : "text-red-600"
-                  }`}
-                >
+              <tr key={rapport.id}>
+                <td className="px-6 py-4 text-slate-200">{rapport.classe}</td>
+                <td className="px-6 py-4 text-slate-400">{rapport.periode}</td>
+                <td className={`px-6 py-4 font-semibold ${couleurTaux(rapport.tauxPresence)}`}>
                   {rapport.tauxPresence}%
                 </td>
                 <td className="px-6 py-4">
-                  <button className="text-blue-600 hover:underline text-sm mr-3">
+                  <button className="text-orange-400 hover:underline text-sm mr-3">
                     Voir détails
                   </button>
                   <button
                     onClick={() => handleSupprimer(rapport.id)}
-                    className="text-red-600 hover:underline text-sm"
+                    className="text-red-400 hover:underline text-sm"
                   >
                     Supprimer
                   </button>
