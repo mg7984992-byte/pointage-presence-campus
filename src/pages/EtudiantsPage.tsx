@@ -12,6 +12,10 @@ function EtudiantsPage() {
   const [classe, setClasse] = useState('')
   const [email, setEmail] = useState('')
   const [recherche, setRecherche] = useState('')
+  const [idEnEdition, setIdEnEdition] = useState<number | null>(null)
+  const [editNom, setEditNom] = useState('')
+  const [editClasse, setEditClasse] = useState('')
+  const [editEmail, setEditEmail] = useState('')
 
   const etudiantsFiltres = etudiants.filter((etudiant) =>
     etudiant.nom.toLowerCase().includes(recherche.toLowerCase())
@@ -34,6 +38,28 @@ function EtudiantsPage() {
 
   function handleSupprimer(id: number) {
     setEtudiants(etudiants.filter((etudiant) => etudiant.id !== id))
+  }
+
+  function commencerEdition(etudiant: typeof etudiants[0]) {
+    setIdEnEdition(etudiant.id)
+    setEditNom(etudiant.nom)
+    setEditClasse(etudiant.classe)
+    setEditEmail(etudiant.email)
+  }
+
+  function annulerEdition() {
+    setIdEnEdition(null)
+  }
+
+  function enregistrerEdition(id: number) {
+    setEtudiants(
+      etudiants.map((etudiant) =>
+        etudiant.id === id
+          ? { ...etudiant, nom: editNom, classe: editClasse, email: editEmail }
+          : etudiant
+      )
+    )
+    setIdEnEdition(null)
   }
 
   return (
@@ -105,24 +131,67 @@ function EtudiantsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-700">
-            {etudiantsFiltres.map((etudiant) => (
-              <tr key={etudiant.id}>
-                <td className="px-6 py-4 text-slate-200">{etudiant.nom}</td>
-                <td className="px-6 py-4 text-slate-300">{etudiant.classe}</td>
-                <td className="px-6 py-4 text-slate-400">{etudiant.email}</td>
-                <td className="px-6 py-4">
-                  <button className="text-orange-400 hover:underline text-sm mr-3">
-                    Modifier
-                  </button>
-                  <button
-                    onClick={() => handleSupprimer(etudiant.id)}
-                    className="text-red-400 hover:underline text-sm"
-                  >
-                    Supprimer
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {etudiantsFiltres.map((etudiant) =>
+              idEnEdition === etudiant.id ? (
+                <tr key={etudiant.id} className="bg-slate-800">
+                  <td className="px-6 py-3">
+                    <input
+                      value={editNom}
+                      onChange={(e) => setEditNom(e.target.value)}
+                      className="bg-slate-700 border border-slate-600 text-slate-200 rounded px-2 py-1 w-full"
+                    />
+                  </td>
+                  <td className="px-6 py-3">
+                    <input
+                      value={editClasse}
+                      onChange={(e) => setEditClasse(e.target.value)}
+                      className="bg-slate-700 border border-slate-600 text-slate-200 rounded px-2 py-1 w-full"
+                    />
+                  </td>
+                  <td className="px-6 py-3">
+                    <input
+                      value={editEmail}
+                      onChange={(e) => setEditEmail(e.target.value)}
+                      className="bg-slate-700 border border-slate-600 text-slate-200 rounded px-2 py-1 w-full"
+                    />
+                  </td>
+                  <td className="px-6 py-3">
+                    <button
+                      onClick={() => enregistrerEdition(etudiant.id)}
+                      className="text-green-400 hover:underline text-sm mr-3"
+                    >
+                      Enregistrer
+                    </button>
+                    <button
+                      onClick={annulerEdition}
+                      className="text-slate-400 hover:underline text-sm"
+                    >
+                      Annuler
+                    </button>
+                  </td>
+                </tr>
+              ) : (
+                <tr key={etudiant.id}>
+                  <td className="px-6 py-4 text-slate-200">{etudiant.nom}</td>
+                  <td className="px-6 py-4 text-slate-300">{etudiant.classe}</td>
+                  <td className="px-6 py-4 text-slate-400">{etudiant.email}</td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => commencerEdition(etudiant)}
+                      className="text-orange-400 hover:underline text-sm mr-3"
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      onClick={() => handleSupprimer(etudiant.id)}
+                      className="text-red-400 hover:underline text-sm"
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              )
+            )}
           </tbody>
         </table>
       </div>
