@@ -9,13 +9,13 @@ function Modal({ isOpen, onClose, title, children }: ModalProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-96 max-w-full p-6">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+      <div className="bg-slate-900 border border-slate-700 rounded-lg shadow-lg w-96 max-w-full p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold text-blue-600">{title}</h2>
+          <h2 className="text-lg font-bold text-orange-400">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-xl leading-none"
+            className="text-slate-400 hover:text-slate-200 text-xl leading-none"
           >
             ×
           </button>
