@@ -11,6 +11,10 @@ function RapportsPage() {
   const [classe, setClasse] = useState('')
   const [periode, setPeriode] = useState('')
   const [tauxPresence, setTauxPresence] = useState('')
+  const [idEnEdition, setIdEnEdition] = useState<number | null>(null)
+  const [editClasse, setEditClasse] = useState('')
+  const [editPeriode, setEditPeriode] = useState('')
+  const [editTaux, setEditTaux] = useState('')
 
   function handleAjouter(e: React.FormEvent) {
     e.preventDefault()
@@ -29,6 +33,24 @@ function RapportsPage() {
 
   function handleSupprimer(id: number) {
     setRapports(rapports.filter((rapport) => rapport.id !== id))
+  }
+
+  function commencerEdition(rapport: typeof rapports[0]) {
+    setIdEnEdition(rapport.id)
+    setEditClasse(rapport.classe)
+    setEditPeriode(rapport.periode)
+    setEditTaux(String(rapport.tauxPresence))
+  }
+
+  function enregistrerEdition(id: number) {
+    setRapports(
+      rapports.map((rapport) =>
+        rapport.id === id
+          ? { ...rapport, classe: editClasse, periode: editPeriode, tauxPresence: Number(editTaux) }
+          : rapport
+      )
+    )
+    setIdEnEdition(null)
   }
 
   function couleurTaux(taux: number) {
@@ -105,26 +127,70 @@ function RapportsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-700">
-            {rapports.map((rapport) => (
-              <tr key={rapport.id}>
-                <td className="px-6 py-4 text-slate-200">{rapport.classe}</td>
-                <td className="px-6 py-4 text-slate-400">{rapport.periode}</td>
-                <td className={`px-6 py-4 font-semibold ${couleurTaux(rapport.tauxPresence)}`}>
-                  {rapport.tauxPresence}%
-                </td>
-                <td className="px-6 py-4">
-                  <button className="text-orange-400 hover:underline text-sm mr-3">
-                    Voir détails
-                  </button>
-                  <button
-                    onClick={() => handleSupprimer(rapport.id)}
-                    className="text-red-400 hover:underline text-sm"
-                  >
-                    Supprimer
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {rapports.map((rapport) =>
+              idEnEdition === rapport.id ? (
+                <tr key={rapport.id} className="bg-slate-800">
+                  <td className="px-6 py-3">
+                    <input
+                      value={editClasse}
+                      onChange={(e) => setEditClasse(e.target.value)}
+                      className="bg-slate-700 border border-slate-600 text-slate-200 rounded px-2 py-1 w-full"
+                    />
+                  </td>
+                  <td className="px-6 py-3">
+                    <input
+                      value={editPeriode}
+                      onChange={(e) => setEditPeriode(e.target.value)}
+                      className="bg-slate-700 border border-slate-600 text-slate-200 rounded px-2 py-1 w-full"
+                    />
+                  </td>
+                  <td className="px-6 py-3">
+                    <input
+                      type="number"
+                      value={editTaux}
+                      onChange={(e) => setEditTaux(e.target.value)}
+                      className="bg-slate-700 border border-slate-600 text-slate-200 rounded px-2 py-1 w-20"
+                    />
+                  </td>
+                  <td className="px-6 py-3">
+                    <button
+                      onClick={() => enregistrerEdition(rapport.id)}
+                      className="text-green-400 hover:underline text-sm mr-3"
+                    >
+                      Enregistrer
+                    </button>
+                    <button
+                      onClick={() => setIdEnEdition(null)}
+                      className="text-slate-400 hover:underline text-sm"
+                    >
+                      Annuler
+                    </button>
+                  </td>
+                </tr>
+              ) : (
+                <tr key={rapport.id}>
+                  <td className="px-6 py-4 text-slate-200">{rapport.classe}</td>
+                  <td className="px-6 py-4 text-slate-400">{rapport.periode}</td>
+                  <td className={`px-6 py-4 font-semibold ${couleurTaux(rapport.tauxPresence)}`}>
+                    {rapport.tauxPresence}%
+                  </td>
+                  <td className="px-6 py-4">
+                    <button
+                      onClick={() => commencerEdition(rapport)}
+                      className="text-orange-400 hover:underline text-sm mr-3"
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      onClick={() => handleSupprimer(rapport.id)}
+                      className="text-red-400 hover:underline text-sm"
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              )
+            )}
           </tbody>
         </table>
       </div>
