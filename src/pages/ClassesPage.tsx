@@ -12,6 +12,9 @@ function ClassesPage() {
   const [nom, setNom] = useState('')
   const [enseignant, setEnseignant] = useState('')
   const [classeSelectionnee, setClasseSelectionnee] = useState<typeof classes[0] | null>(null)
+  const [modeEdition, setModeEdition] = useState(false)
+  const [editNom, setEditNom] = useState('')
+  const [editEnseignant, setEditEnseignant] = useState('')
 
   function handleAjouter(e: React.FormEvent) {
     e.preventDefault()
@@ -29,6 +32,31 @@ function ClassesPage() {
 
   function handleSupprimer(id: number) {
     setClasses(classes.filter((classe) => classe.id !== id))
+  }
+
+  function ouvrirDetails(classe: typeof classes[0]) {
+    setClasseSelectionnee(classe)
+    setModeEdition(false)
+  }
+
+  function commencerEdition() {
+    if (!classeSelectionnee) return
+    setEditNom(classeSelectionnee.nom)
+    setEditEnseignant(classeSelectionnee.enseignant)
+    setModeEdition(true)
+  }
+
+  function enregistrerEdition() {
+    if (!classeSelectionnee) return
+    setClasses(
+      classes.map((classe) =>
+        classe.id === classeSelectionnee.id
+          ? { ...classe, nom: editNom, enseignant: editEnseignant }
+          : classe
+      )
+    )
+    setClasseSelectionnee({ ...classeSelectionnee, nom: editNom, enseignant: editEnseignant })
+    setModeEdition(false)
   }
 
   return (
@@ -85,7 +113,7 @@ function ClassesPage() {
             </p>
             <div className="flex justify-between">
               <button
-                onClick={() => setClasseSelectionnee(classe)}
+                onClick={() => ouvrirDetails(classe)}
                 className="text-orange-400 hover:underline text-sm"
               >
                 Voir les détails
@@ -106,10 +134,51 @@ function ClassesPage() {
         onClose={() => setClasseSelectionnee(null)}
         title={classeSelectionnee?.nom || ''}
       >
-        {classeSelectionnee && (
-          <div className="space-y-2 text-sm text-slate-700">
-            <p><strong>Nombre d'étudiants :</strong> {classeSelectionnee.nbEtudiants}</p>
-            <p><strong>Enseignant :</strong> {classeSelectionnee.enseignant}</p>
+        {classeSelectionnee && !modeEdition && (
+          <div className="space-y-3 text-sm text-slate-300">
+            <p><strong className="text-slate-100">Nombre d'étudiants :</strong> {classeSelectionnee.nbEtudiants}</p>
+            <p><strong className="text-slate-100">Enseignant :</strong> {classeSelectionnee.enseignant}</p>
+            <button
+              onClick={commencerEdition}
+              className="mt-2 text-orange-400 hover:underline text-sm"
+            >
+              Modifier
+            </button>
+          </div>
+        )}
+
+        {classeSelectionnee && modeEdition && (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Nom de la classe</label>
+              <input
+                value={editNom}
+                onChange={(e) => setEditNom(e.target.value)}
+                className="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded px-3 py-2"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-slate-400 mb-1">Enseignant</label>
+              <input
+                value={editEnseignant}
+                onChange={(e) => setEditEnseignant(e.target.value)}
+                className="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded px-3 py-2"
+              />
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={enregistrerEdition}
+                className="text-green-400 hover:underline text-sm"
+              >
+                Enregistrer
+              </button>
+              <button
+                onClick={() => setModeEdition(false)}
+                className="text-slate-400 hover:underline text-sm"
+              >
+                Annuler
+              </button>
+            </div>
           </div>
         )}
       </Modal>
