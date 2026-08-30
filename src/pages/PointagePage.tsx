@@ -7,6 +7,9 @@ function PointagePage() {
     { id: 3, nom: "Fall Fatou", statut: "Présent" },
   ])
 
+  const [idEnEdition, setIdEnEdition] = useState<number | null>(null)
+  const [editNom, setEditNom] = useState('')
+
   function toggleStatut(id: number) {
     setEtudiants(
       etudiants.map((etudiant) =>
@@ -18,6 +21,20 @@ function PointagePage() {
           : etudiant
       )
     )
+  }
+
+  function commencerEdition(etudiant: typeof etudiants[0]) {
+    setIdEnEdition(etudiant.id)
+    setEditNom(etudiant.nom)
+  }
+
+  function enregistrerEdition(id: number) {
+    setEtudiants(
+      etudiants.map((etudiant) =>
+        etudiant.id === id ? { ...etudiant, nom: editNom } : etudiant
+      )
+    )
+    setIdEnEdition(null)
   }
 
   function couleurBarre(statut: string) {
@@ -45,7 +62,15 @@ function PointagePage() {
               key={etudiant.id}
               className="flex items-center justify-between px-6 py-4"
             >
-              <span className="text-slate-200">{etudiant.nom}</span>
+              {idEnEdition === etudiant.id ? (
+                <input
+                  value={editNom}
+                  onChange={(e) => setEditNom(e.target.value)}
+                  className="bg-slate-800 border border-slate-700 text-slate-200 rounded px-2 py-1 w-32"
+                />
+              ) : (
+                <span className="text-slate-200">{etudiant.nom}</span>
+              )}
 
               <div className="flex items-center gap-4 flex-1 max-w-xs mx-6">
                 <div className="w-full h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -53,12 +78,30 @@ function PointagePage() {
                 </div>
               </div>
 
-              <button
-                onClick={() => toggleStatut(etudiant.id)}
-                className={`text-sm font-medium ${couleurTexte(etudiant.statut)}`}
-              >
-                {etudiant.statut.toLowerCase()}
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => toggleStatut(etudiant.id)}
+                  className={`text-sm font-medium ${couleurTexte(etudiant.statut)}`}
+                >
+                  {etudiant.statut.toLowerCase()}
+                </button>
+
+                {idEnEdition === etudiant.id ? (
+                  <button
+                    onClick={() => enregistrerEdition(etudiant.id)}
+                    className="text-green-400 hover:underline text-xs"
+                  >
+                    OK
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => commencerEdition(etudiant)}
+                    className="text-slate-500 hover:text-orange-400 text-xs"
+                  >
+                    ✎
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
