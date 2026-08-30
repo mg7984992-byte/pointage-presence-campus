@@ -47,3 +47,39 @@ export async function login(email: string, motDePasse: string) {
   })
   return response.json()
 }
+/*
+=== EXEMPLE : comment utiliser ces fonctions dans une page ===
+
+Une fois le backend prêt, voici comment on remplacera les données
+fictives (useState) par de vraies données venant de l'API :
+
+import { useState, useEffect } from 'react'
+import { getEtudiants, addEtudiant, deleteEtudiant } from '../services/api'
+
+function EtudiantsPage() {
+  const [etudiants, setEtudiants] = useState([])
+  const [chargement, setChargement] = useState(true)
+
+  // useEffect se déclenche une seule fois, au chargement de la page
+  useEffect(() => {
+    getEtudiants()
+      .then((data) => setEtudiants(data))
+      .catch((erreur) => console.error("Erreur de chargement :", erreur))
+      .finally(() => setChargement(false))
+  }, [])
+
+  async function handleAjouter(nouvelEtudiant) {
+    const etudiantCree = await addEtudiant(nouvelEtudiant)
+    setEtudiants([...etudiants, etudiantCree]) // on l'ajoute à l'affichage
+  }
+
+  async function handleSupprimer(id) {
+    await deleteEtudiant(id)
+    setEtudiants(etudiants.filter((e) => e.id !== id)) // on le retire de l'affichage
+  }
+
+  if (chargement) return <p>Chargement...</p>
+
+  // ... le reste du JSX reste identique à ce qu'on a déjà fait
+}
+*/
