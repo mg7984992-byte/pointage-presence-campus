@@ -1,63 +1,86 @@
-# Pointo — Pointage & Présence Campus
+# Backend — Plateforme de Pointage
 
-Plateforme de gestion du pointage et de la présence des étudiants et du staff.
+Node.js + Express + TypeScript + Sequelize + MySQL
 
-## Stack technique
+## Installation
 
-- **Frontend** : React + TypeScript + Tailwind CSS
-- **Backend** : NestJS
-- **Base de données** : MySQL + Prisma
-
-## Structure du projet
-
-```
-pointage-presence-campus/
-├── src/            → frontend (React)
-├── database/       → schéma Prisma, migrations, seed
-└── README.md
+```bash
+cd backend
+npm install
+cp .env.example .env   # puis renseigner DB_USER, DB_PASSWORD, JWT_SECRET...
 ```
 
-## Installation de la base de données (dossier `database/`)
+Créer la base de données MySQL (une seule fois) :
 
-1. Installer les dépendances :
-   ```
-   cd database
-   npm install
-   ```
+```sql
+CREATE DATABASE plateforme_pointage CHARACTER SET utf8mb4;
+```
 
-2. Créer une base MySQL nommée `pointage_campus` (via phpMyAdmin ou en ligne de commande).
+Lancer le serveur en développement (crée/synchronise automatiquement les tables) :
 
-3. Copier `.env.example` en `.env` et adapter les identifiants si besoin :
-   ```
-   DATABASE_URL="mysql://root:@localhost:3306/pointage_campus"
-   ```
+```bash
+npm run dev
+```
 
-4. Appliquer les migrations (crée les 8 tables) :
-   ```
-   npx prisma migrate dev
-   ```
+## Schéma de la base de données
 
-5. Remplir la base avec des données de test :
-   ```
-   npx prisma db seed
-   ```
+```
+users
+├── id            INT UNSIGNED, PK, AUTO_INCREMENT
+├── nom           VARCHAR(100)
+├── prenom        VARCHAR(100)
+├── email         VARCHAR(150), UNIQUE
+├── mot_de_passe  VARCHAR(255)   -- haché avec bcrypt
+├── role          ENUM('admin','membre')
+├── created_at, updated_at
 
-6. (Optionnel) Visualiser les données :
-   ```
-   npx prisma studio
-   ```
+pointage_sessions
+├── id            INT UNSIGNED, PK, AUTO_INCREMENT
+├── titre         VARCHAR(150)
+├── description   TEXT (nullable)
+├── date_debut    DATETIME
+├── date_fin      DATETIME (nullable)
+├── statut        ENUM('ouverte','fermee')
+├── createur_id   INT UNSIGNED, FK -> users.id
+├── created_at, updated_at
 
-## Comptes de test créés par le seed
+presences
+├── id            INT UNSIGNED, PK, AUTO_INCREMENT
+├── session_id    INT UNSIGNED, FK -> pointage_sessions.id (CASCADE)
+├── user_id       INT UNSIGNED, FK -> users.id
+├── heure_arrivee DATETIME (nullable)
+├── heure_depart  DATETIME (nullable)
+├── statut        ENUM('present','retard','absent')
+├── created_at, updated_at
+└── UNIQUE(session_id, user_id)   -- un pointage par utilisateur et par session
+```
 
-| Rôle     | Email               |
-|----------|---------------------|
-| Admin    | admin@campus.sn     |
-| Étudiant | etudiant@campus.sn  |
+Relations : `User 1—N PointageSession` (créateur), `PointageSession 1—N Presence`, `User 1—N Presence`.
 
-*(mots de passe placeholders — le vrai système d'authentification est géré par le backend)*
+## Endpoints principaux
 
-## Équipe
+### Auth (`/api/auth`) — public
+- `POST /register` — { nom, prenom, email, motDePasse } → { user, token }
+- `POST /login` — { email, motDePasse } → { user, token }
 
-- **Membre 1** — Frontend & expérience utilisateur
-- **Membre 2** — Backend & API
-- **Membre 3** — Base de données & infrastructure
+### Users (`/api/users`) — requiert `Authorization: Bearer <token>`
+- `GET /me` — profil courant
+- `GET /` — liste (admin uniquement)
+- `GET /:id`
+- `PUT /:id`
+- `DELETE /:id` (admin uniquement)
+
+### Pointage (`/api/pointage`) — requiert `Authorization: Bearer <token>`
+- `POST /sessions` — { titre, description?, dateDebut? } — crée une session
+- `GET /sessions` — liste toutes les sessions
+- `GET /sessions/:id` — détail + présences
+- `PATCH /sessions/:id/fermer` — ferme la session
+- `POST /sessions/:id/arrivee` — pointer son arrivée
+- `POST /sessions/:id/depart` — pointer son départ
+- `GET /sessions/:id/presences` — présences d'une session
+- `GET /mes-presences` — historique de l'utilisateur connecté
+
+## Sécurité
+- Mots de passe hachés avec `bcryptjs` (10 rounds), jamais renvoyés au client.
+- Authentification par JWT (`Authorization: Bearer <token>`), expiration configurable via `JWT_EXPIRES_IN`.
+- Routes Users/Pointage protégées par `authMiddleware`, routes sensibles réservées à l'admin via `adminOnly`.
